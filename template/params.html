@@ -1,0 +1,283 @@
+<%include file="header-jquery.html" />
+<script type="text/javascript">
+<%include file="js/createlinkedslider.js" />
+</script>
+
+<p>
+%if ('is3d' not in app.cfg['meta']) or (not app.cfg['meta']['is3d']):
+  2D : You can set the parameters for the rigid motion : translation <font color=blue> <i>tx</i></font>, <font color=blue> <i>ty</i> </font> and the rotation <font color=blue> <i>theta</i></font>. <br/>
+%else:
+  3D : You can set the parameters for the Volumetric-Hierarchical Approximate Convex Decomposition (V-HACD) : <br><font color=blue> <i>resolution</i></font>, <font color=blue> <i>depth</i> </font> and <font color=blue> <i>minVolumePerCH</i></font>. <br/>
+%endif  
+</p>
+
+<form action="${app.base_url + 'wait'}" method="get">
+  <div class="action">
+  <input type="hidden" name="key" value="${app.key}">
+    <ul>
+       <!-- 2D -->
+      %if ('is3d' not in app.cfg['meta']) or (not app.cfg['meta']['is3d']):
+      <li>verify the discrete regularity: 
+        <input type="radio" name="regu" value="True" checked > Yes &nbsp;
+        <input type="radio" name="regu" value="False" > No
+      </li>
+      <li>
+        <!-- code for slider -->
+        <div style="float:left;padding-right:25px">
+          <label for="tx">translation along x axis, <font color=blue><i>tx</i></font> : </label>
+           <input type="text" style="font-family:monospace;text-align:right"
+              size="4" id="tx" name="tx" value="0.0" />
+        </div>
+        <div id="tx_slider" name="tx_slider" style="width:280px;float:left;margin-top:4px;font-size:10pt"></div>
+        <script type="text/javascript">
+        // Turn DIV slider into a slider linked to scale
+        $(document).ready(function() {
+              createLinkedSlider('#tx', '#tx_slider', 0, 1, 0.1);
+        });
+        </script>
+        <div style="clear:both"> </div>
+        <!-- end of code for slider -->
+      </li>
+      <li>
+       <!-- code for slider -->
+       <div style="float:left;padding-right:25px">
+       <label for="ty">translation along y axis, <font color=blue><i>ty</i></font> : </label>
+        <input type="text" style="font-family:monospace;text-align:right"
+           size="4" id="ty" name="ty" value="0.0" />
+       </div>
+       <div id="ty_slider" name="ty_slider" style="width:280px;float:left;margin-top:4px;font-size:10pt"></div>
+       <script type="text/javascript">
+       // Turn DIV slider into a slider linked to scale
+       $(document).ready(function() {
+             createLinkedSlider('#ty', '#ty_slider', 0, 1, 0.1);
+       });
+       </script>
+       <div style="clear:both"> </div>
+       <!-- end of code for slider -->
+      </li>
+      <li>
+       <!-- code for slider -->
+       <div style="float:left;padding-right:25px">
+        <label for="theta">rotation angle, <font color=blue><i>theta</i></font> : </label>
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
+        <input type="text" style="font-family:monospace;text-align:right"
+           size="4" id="theta" name="theta" value="0.0" />
+       </div>
+       <div id="theta_slider" name="theta_slider" style="width:280px;float:left;margin-top:4px;font-size:10pt"></div>
+       <script type="text/javascript">
+       // Turn DIV slider into a slider linked to scale
+       $(document).ready(function() {
+             createLinkedSlider('#theta', '#theta_slider', 0, 6.28, 0.01);
+       });
+       </script>
+       <div style="clear:both"> </div>
+       <!-- end of code for slider -->
+      </li>
+
+      <!-- 3D -->
+      %else:
+      <li>
+        <!-- code for slider -->
+        <div style="float:left;padding-right:25px">
+          <label for="resolution">maximum number of voxels generated, <font color=blue><i>resolution</i></font> : </label>
+          &nbsp; &nbsp;
+          <input type="text" style="font-family:monospace;text-align:right"
+              size="7" id="resolution" name="resolution" value="100000" />
+        </div>
+        <div id="resolution_slider" name="resolution_slider" style="width:280px;float:left;margin-top:4px;font-size:10pt"></div>
+        <script type="text/javascript">
+        // Turn DIV slider into a slider linked to scale
+        $(document).ready(function() {
+              createLinkedSlider('#resolution', '#resolution_slider', 10000, 16000000, 10000);
+        });
+        </script>
+        <div style="clear:both"> </div>
+        <!-- end of code for slider -->
+      </li>
+      <li>
+       <!-- code for slider -->
+       <div style="float:left;padding-right:25px">
+        <label for="depth">maximum number of clipping stages, <font color=blue><i>depth</i></font> : </label>
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+        <input type="text" style="font-family:monospace;text-align:right"
+           size="7" id="depth" name="depth" value="20" />
+       </div>
+       <div id="depth_slider" name="depth_slider" style="width:280px;float:left;margin-top:4px;font-size:10pt"></div>
+       <script type="text/javascript">
+       // Turn DIV slider into a slider linked to scale
+       $(document).ready(function() {
+             createLinkedSlider('#depth', '#depth_slider', 1, 32, 1);
+       });
+       </script>
+       <div style="clear:both"> </div>
+       <!-- end of code for slider -->
+      </li>
+      <li>
+       <!-- code for slider -->
+       <div style="float:left;padding-right:25px">
+        <label for="minvolumeperch">minimum volume of convex hulls, <font color=blue><i>minVolumePerCH</i></font> : </label>
+        <input type="text" style="font-family:monospace;text-align:right"
+           size="7" id="minvolumeperch" name="minvolumeperch" value="0.0001" />
+       </div>
+       <div id="minvolumeperch_slider" name="minvolumeperch_slider" style="width:280px;float:left;margin-top:4px;font-size:10pt"></div>
+       <script type="text/javascript">
+       // Turn DIV slider into a slider linked to scale
+       $(document).ready(function() {
+             createLinkedSlider('#minvolumeperch', '#minvolumeperch_slider', 0.0, 1.0, 0.0001);
+       });
+       </script>
+       <div style="clear:both"> </div>
+       <!-- end of code for slider -->
+      </li>
+
+      <p>
+  		Set the parameters for the rigid motion : translation <font color=blue> <i>tx</i></font>, <font color=blue> <i>ty</i> </font>, <font color=blue> <i>tz</i></font>, the rotation <font color=blue> <i>alpha</i></font>, <font color=blue> <i>beta</i></font>, <font color=blue> <i>gamma</i></font> and scale for data <font color=blue> <i>sampling</i></font>. <br/>
+  	  </p>
+      <li>
+        <!-- code for slider -->
+        <div style="float:left;padding-right:25px">
+          <label for="tx">translation along x axis, <font color=blue><i>tx</i></font> : </label>
+          &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
+          <input type="text" style="font-family:monospace;text-align:right"
+              size="4" id="tx" name="tx" value="0.0" />
+        </div>
+        <div id="tx_slider" name="tx_slider" style="width:280px;float:left;margin-top:4px;font-size:10pt"></div>
+        <script type="text/javascript">
+        // Turn DIV slider into a slider linked to scale
+        $(document).ready(function() {
+              createLinkedSlider('#tx', '#tx_slider', 0, 1, 0.1);
+        });
+        </script>
+        <div style="clear:both"> </div>
+        <!-- end of code for slider -->
+      </li>
+      <li>
+       <!-- code for slider -->
+       <div style="float:left;padding-right:25px">
+        <label for="ty">translation along y axis, <font color=blue><i>ty</i></font> : </label>
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
+        <input type="text" style="font-family:monospace;text-align:right"
+           size="4" id="ty" name="ty" value="0.0" />
+       </div>
+       <div id="ty_slider" name="ty_slider" style="width:280px;float:left;margin-top:4px;font-size:10pt"></div>
+       <script type="text/javascript">
+       // Turn DIV slider into a slider linked to scale
+       $(document).ready(function() {
+             createLinkedSlider('#ty', '#ty_slider', 0, 1, 0.1);
+       });
+       </script>
+       <div style="clear:both"> </div>
+       <!-- end of code for slider -->
+      </li>
+      <li>
+       <!-- code for slider -->
+       <div style="float:left;padding-right:25px">
+        <label for="tz">translation along z axis, <font color=blue><i>tz</i></font> : </label>
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
+        <input type="text" style="font-family:monospace;text-align:right"
+           size="4" id="tz" name="tz" value="0.0" />
+       </div>
+       <div id="tz_slider" name="tz_slider" style="width:280px;float:left;margin-top:4px;font-size:10pt"></div>
+       <script type="text/javascript">
+       // Turn DIV slider into a slider linked to scale
+       $(document).ready(function() {
+             createLinkedSlider('#tz', '#tz_slider', 0, 1, 0.1);
+       });
+       </script>
+       <div style="clear:both"> </div>
+       <!-- end of code for slider -->
+      </li>
+      <li>
+       <!-- code for slider -->
+       <div style="float:left;padding-right:25px">
+        <label for="alpha">rotation angle by x-axis, <font color=blue><i>alpha</i></font> : </label>
+        &nbsp; &nbsp; &nbsp;&nbsp;
+        <input type="text" style="font-family:monospace;text-align:right"
+           size="4" id="alpha" name="alpha" value="0.0" />
+       </div>
+       <div id="alpha_slider" name="alpha_slider" style="width:280px;float:left;margin-top:4px;font-size:10pt"></div>
+       <script type="text/javascript">
+       // Turn DIV slider into a slider linked to scale
+       $(document).ready(function() {
+             createLinkedSlider('#alpha', '#alpha_slider', 0, 6.28, 0.01);
+       });
+       </script>
+       <div style="clear:both"> </div>
+       <!-- end of code for slider -->
+      </li>
+      <li>
+       <!-- code for slider -->
+       <div style="float:left;padding-right:25px">
+        <label for="beta">rotation angle by y-axis, <font color=blue><i>beta</i></font> : </label>
+        &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
+        <input type="text" style="font-family:monospace;text-align:right"
+           size="4" id="beta" name="beta" value="0.0" />
+       </div>
+       <div id="beta_slider" name="beta_slider" style="width:280px;float:left;margin-top:4px;font-size:10pt"></div>
+       <script type="text/javascript">
+       // Turn DIV slider into a slider linked to scale
+       $(document).ready(function() {
+             createLinkedSlider('#beta', '#beta_slider', 0, 6.28, 0.01);
+       });
+       </script>
+       <div style="clear:both"> </div>
+       <!-- end of code for slider -->
+      </li>
+      <li>
+       <!-- code for slider -->
+       <div style="float:left;padding-right:25px">
+        <label for="gamma">rotation angle by z-axis, <font color=blue><i>gamma</i></font> :</label>
+        &nbsp; &nbsp; 
+        <input type="text" style="font-family:monospace;text-align:right"
+           size="4" id="gamma" name="gamma" value="0.0" />
+       </div>
+       <div id="gamma_slider" name="gamma_slider" style="width:280px;float:left;margin-top:4px;font-size:10pt"></div>
+       <script type="text/javascript">
+       // Turn DIV slider into a slider linked to scale
+       $(document).ready(function() {
+             createLinkedSlider('#gamma', '#gamma_slider', 0, 6.28, 0.01);
+       });
+       </script>
+       <div style="clear:both"> </div>
+       <!-- end of code for slider -->
+      </li>
+      <li>
+       <!-- code for slider -->
+       <div style="float:left;padding-right:25px">
+        <label for="sampling">scale for data, <font color=blue><i>sampling</i></font> : </label>
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;   
+        <input type="text" style="font-family:monospace;text-align:right"
+           size="4" id="sampling" name="sampling" value="100" />
+       </div>
+       <div id="sampling_slider" name="sampling_slider" style="width:280px;float:left;margin-top:4px;font-size:10pt"></div>
+       <script type="text/javascript">
+       // Turn DIV slider into a slider linked to scale
+       $(document).ready(function() {
+             createLinkedSlider('#sampling', '#sampling_slider', 0, 1000, 10);
+       });
+       </script>
+       <div style="clear:both"> </div>
+       <!-- end of code for slider -->
+      </li>
+      %endif
+    </ul>
+ 
+  <BR>
+  Run the algorithm <input type="submit"  name="action" value="run" />
+  </div>
+</form>
+
+<hr/>
+<!---
+%if ('is3d' in app.cfg['meta']) and ( app.cfg['meta']['is3d']) :
+<div>
+  <img src="${app.work_url + 'input_0.png'}" alt="" />
+</div>
+%else:
+<div>
+  <img src="${app.work_url + 'input_0.png'}" />
+</div>
+%endif
+-->
+<img src="${app.work_url + 'input_0.png'}" />
+<%include file="footer.html" />

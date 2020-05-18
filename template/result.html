@@ -1,0 +1,322 @@
+<%include file="header.html" />
+
+<META NAME="Author" CONTENT="JSC3D">
+
+<p>
+  The algorithm was applied with by the following parameters for rigid motion:
+<ul>
+%if not app.cfg['meta']['is3d']:
+   <li> translation along x axis <font color="blue"><i>tx</i></font>: ${app.cfg['param']['tx']}  </li>
+   <li> translation along y axis <font color="blue"><i>ty</i></font>: ${app.cfg['param']['ty']} </li>
+   <li> rotation angle <font color="blue"><i>theta</i></font>: ${app.cfg['param']['theta']} </li>
+   
+%else:
+<li> maximum number of voxels generated <font color="blue"><i>resolution</i></font>: ${app.cfg['param']['resolution']}  </li>
+   <li> maximum number of clipping stages <font color="blue"><i>depth</i></font>: ${app.cfg['param']['depth']} </li>
+   <li> minimum volume of convex hulls <font color="blue"><i>minvolumeperch</i></font>: ${app.cfg['param']['minvolumeperch']}  </li>
+   <li> translation along x axis <font color="blue"><i>tx</i></font>: ${app.cfg['param']['tx']}  </li>
+   <li> translation along y axis <font color="blue"><i>ty</i></font>: ${app.cfg['param']['ty']} </li>
+   <li> translation along z axis <font color="blue"><i>tz</i></font>: ${app.cfg['param']['tz']} </li>
+   <li> rotation angle by x axis <font color="blue"><i>alpha</i></font>: ${app.cfg['param']['alpha']}  </li>
+   <li> rotation angle by y axis <font color="blue"><i>beta</i></font>: ${app.cfg['param']['beta']}  </li>
+   <li> rotation angle by z axis <font color="blue"><i>gamma</i></font>: ${app.cfg['param']['gamma']}  </li>
+   <li> scale for data <font color="blue"><i>sampling</i></font>: ${app.cfg['param']['sampling']}  </li>
+%endif
+</ul>
+</p>
+<form action="${app.base_url}" method="get">
+  <div class="action">
+    Restart this algorithm with new data.
+    <input type="submit" value="new input" />
+  </div>
+</form>
+
+<form action="${app.base_url + 'params'}" method="get">
+  <div class="action">
+    Restart this algorithm with new parameters.
+    <input type="hidden" name="key" value="${app.key}">
+    <input type="hidden" name="newrun" value="1">
+    <input type="submit" value="new parameters" />
+  </div>
+</form>
+
+<hr />
+
+<h2>Result</h2>
+
+%if not app.cfg['meta']['is3d']:
+	<p>You can download the polygon extraction in <a href="${app.work_url+'input_0_poly.eps'}">eps</a> format,
+		the convex decomposition in <a href="${app.work_url+'input_0_decomp.eps'}">eps</a> format, 
+		the digitized convex decomposition in <a href="${app.work_url+'input_0_shape.eps'}">eps</a> format and 
+		the transformed result in <a href="${app.work_url+'result_0.pgm'}">pgm</a> format.</p>
+%else:
+	<p>You can download the input decomposition in <a href="${app.work_url+'outputVol_0_decomp.obj'}">obj</a> format, the digitization of the decomposition in <a href="${app.work_url+'outputVol_0_shape.obj'}">obj</a> format with <a href="${app.work_url+'outputVol_0_shape.mtl'}">mlt</a> file, and the transformed result in <a href="${app.work_url+'outputVol_0.obj'}">obj</a> format with <a href="${app.work_url+'outputVol_0.mtl'}">mlt</a> file.</p>
+%endif
+
+<div class="gallery" style="height:${height}px">
+  <ul class="index">
+
+%if not app.cfg['meta']['is3d']:
+  	<li>
+      <a href="${app.work_url+'input_0.png'}">Input
+        <span>
+          	<img  height="${heightImageDisplay}" src="${app.work_url + 'input_0.png'}" alt="input selection" />
+        </span>
+      </a>
+	</li>
+	<li>
+      <a href="${app.work_url+'result_poly.png'}">Polygon extraction
+        <span>
+          	<img  height="${heightImageDisplay}" src="${app.work_url + 'result_poly.png'}" alt="polyginalisation result" />
+        </span>
+      </a>
+	</li>
+	<li>
+      <a href="${app.work_url+'result_decomp.png'}">Convex decomposition
+        <span>
+          	<img  height="${heightImageDisplay}" src="${app.work_url + 'result_decomp.png'}" alt="decomposition result" />
+        </span>
+      </a>
+	</li>
+	<li>
+      <a href="${app.work_url+'result_shape.png'}">Digitized convex decomposition
+        <span>
+          	<img  height="${heightImageDisplay}" src="${app.work_url + 'result_shape.png'}" alt="digitized decomposition" />
+        </span>
+      </a>
+	</li>
+    <li>
+      <a href="${app.work_url+'result_0.png'}"> Transformed result
+		<span>
+	  		<img height="${heightImageDisplay}" src="${app.work_url + 'result_0.png'}" alt="transformed result" />
+		</span>
+      </a>
+   </li>
+
+%else:
+	<li> <a href="#" >Input: 3d visualisation
+    <span>
+	<div style="width:490px; margin:auto; position:relative; font-size: 9pt; color: #777777;">
+	<canvas id="cv" style="border: 1px solid;" width="${width}px" height="${height}px">
+    The visualisation used jsc3d, it looks that your navigator does not supported it, please simply download the files result.obj and result.mtl and use a standard 3d viewer.
+	</canvas> </div>
+	<script type="text/javascript" src="https://demo.ipol.im/demo/74/static/jsc3d.js"></script>
+	<script type="text/javascript">
+	var canvas = document.getElementById('cv');
+	var viewer = new JSC3D.Viewer(canvas);
+	var logoTimerID = 0;
+	viewer.setParameter('InitRotationX', -20);
+	viewer.setParameter('InitRotationY', 20);
+	viewer.setParameter('InitRotationZ', 0);
+	viewer.setParameter('ModelColor', '#808080');
+	viewer.setParameter('BackgroundColor1', '#FFFFFF');
+	viewer.setParameter('BackgroundColor2', '#EEEEFF');
+	viewer.setParameter('RenderMode', 'smooth');
+	viewer.init();
+	viewer.update();
+
+	viewer.enableDefaultInputHandler(false);
+	logoTimerID = setInterval( function() {
+		viewer.rotate(0, 10, 0);
+		viewer.update();
+	}, 100);
+	setTimeout( function() {
+		viewer.enableDefaultInputHandler(true);
+		if(logoTimerID > 0)
+			loadModel();
+	}, 80);
+
+	var ctx = canvas.getContext('2d');
+	ctx.font = '12px Courier New';
+	ctx.fillStyle = '#FF0000';
+
+	viewer.afterupdate = function() {
+		if(logoTimerID > 0)
+			return;
+
+		var scene = viewer.getScene();
+		if(scene != null && scene.getChildren().length > 0) {
+			var objects = scene.getChildren();
+			var totalFaceCount = 0;
+			var totalVertexCount = 0
+			for(var i=0; i<objects.length; i++) {
+				totalFaceCount += objects[i].faceCount;
+				totalVertexCount += objects[i].vertexBuffer.length / 3;
+			}
+			ctx.fillText(totalVertexCount.toString() + ' vertices', 10, 20);
+			ctx.fillText(totalFaceCount.toString() + ' faces', 10, 35);
+		}
+
+	};
+
+	function loadModel() {
+		if(logoTimerID > 0) {
+			clearInterval(logoTimerID);
+			logoTimerID = 0;
+			viewer.enableDefaultInputHandler(true);
+		}
+		viewer.replaceSceneFromUrl("${app.work_url + 'inputVol_0.obj'}");
+		viewer.update();
+	}
+	</script>
+	</span>   
+	</a>
+	</li>
+
+	<li> <a href="#" >Digitized input: 3d visualisation
+    <span>
+	<div style="width:490px; margin:auto; position:relative; font-size: 9pt; color: #777777;">
+	<canvas id="cvInput" style="border: 1px solid;" width="${width}px" height="${height}px">
+    The visualisation used jsc3d, it looks that your navigator does not supported it, please simply download the files result.obj and use a standard 3d viewer.
+	</canvas> </div>
+	<script type="text/javascript" src="https://demo.ipol.im/demo/74/static/jsc3d.js"></script>
+	<script type="text/javascript">
+	var canvasInput = document.getElementById('cvInput');
+	var viewerInput = new JSC3D.Viewer(canvasInput);
+	var logoTimerIDInput = 0;
+	viewerInput.setParameter('InitRotationX', -20);
+	viewerInput.setParameter('InitRotationY', 20);
+	viewerInput.setParameter('InitRotationZ', 0);
+	viewerInput.setParameter('ModelColor', '#808080');
+	viewerInput.setParameter('BackgroundColor1', '#FFFFFF');
+	viewerInput.setParameter('BackgroundColor2', '#EEEEFF');
+	viewerInput.setParameter('RenderMode', 'smooth');
+	viewerInput.init();
+	viewerInput.update();
+
+	viewerInput.enableDefaultInputHandler(false);
+	logoTimerIDInput = setInterval( function() {
+		viewerInput.rotate(0, 10, 0);
+		viewerInput.update();
+	}, 100);
+	setTimeout( function() {
+		viewerInput.enableDefaultInputHandler(true);
+		if(logoTimerIDInput > 0)
+			loadModelInput();
+	}, 80);
+
+	var ctxInput = canvasInput.getContext('2d');
+	ctxInput.font = '12px Courier New';
+	ctxInput.fillStyle = '#FF0000';
+
+	viewerInput.afterupdate = function() {
+		if(logoTimerIDInput > 0)
+			return;
+
+		var sceneInput = viewerInput.getScene();
+		if(sceneInput != null && sceneInput.getChildren().length > 0) {
+			var objectsInput = sceneInput.getChildren();
+			var totalFaceCountInput = 0;
+			var totalVertexCountInput = 0
+			for(var i=0; i<objectsInput.length; i++) {
+				totalFaceCountInput += objectsInput[i].faceCount;
+				totalVertexCountInput += objectsInput[i].vertexBuffer.length / 3;
+			}
+			ctxInput.fillText(totalVertexCountInput.toString() + ' vertices', 10, 20);
+			ctxInput.fillText(totalFaceCountInput.toString() + ' faces', 10, 35);
+		}
+
+	};
+	function loadModelInput() {
+		if(logoTimerIDInput > 0) {
+			clearInterval(logoTimerIDInput);
+			logoTimerIDInput = 0;
+			viewerInput.enableDefaultInputHandler(true);
+		}
+		viewerInput.replaceSceneFromUrl("${app.work_url + 'outputVol_0_shape.obj'}");
+		viewerInput.update();
+	}
+	</script>
+	</span>
+	</a>
+	</li>
+	
+    <li> <a href="#" >Digitized transformed result: 3d visualisation
+      <span>
+	<div style="width:490px; margin:auto; position:relative; font-size: 9pt; color: #777777;">
+	<canvas id="cvOutput" style="border: 1px solid;" width="${width}px" height="${height}px">
+    The visualisation used jsc3d, it looks that your navigator does not supported it, please simply download the files result.obj and use a standard 3d viewer.
+	</canvas> </div>
+	<script type="text/javascript" src="https://demo.ipol.im/demo/74/static/jsc3d.js"></script>
+	<script type="text/javascript">
+	var canvasOutput = document.getElementById('cvOutput');
+	var viewerOutput = new JSC3D.Viewer(canvasOutput);
+	var logoTimerIDOutput = 0;
+	viewerOutput.setParameter('InitRotationX', -20);
+	viewerOutput.setParameter('InitRotationY', 20);
+	viewerOutput.setParameter('InitRotationZ', 0);
+	viewerOutput.setParameter('ModelColor', '#808080');
+	viewerOutput.setParameter('BackgroundColor1', '#FFFFFF');
+	viewerOutput.setParameter('BackgroundColor2', '#EEEEFF');
+	viewerOutput.setParameter('RenderMode', 'smooth');
+	viewerOutput.init();
+	viewerOutput.update();
+
+	viewerOutput.enableDefaultInputHandler(false);
+	logoTimerIDOutput = setInterval( function() {
+		viewerOutput.rotate(0, 10, 0);
+		viewerOutput.update();
+	}, 100);
+	setTimeout( function() {
+		viewerOutput.enableDefaultInputHandler(true);
+		if(logoTimerIDOutput > 0)
+			loadModelOutput();
+	}, 80);
+
+	var ctxOutput = canvasOutput.getContext('2d');
+	ctxOutput.font = '12px Courier New';
+	ctxOutput.fillStyle = '#FF0000';
+
+	viewerOutput.afterupdate = function() {
+		if(logoTimerIDOutput > 0)
+			return;
+
+		var sceneOutput = viewerOutput.getScene();
+		if(sceneOutput != null && sceneOutput.getChildren().length > 0) {
+			var objectsOutput = sceneOutput.getChildren();
+			var totalFaceCountOutput = 0;
+			var totalVertexCountOutput = 0
+			for(var i=0; i<objectsOutput.length; i++) {
+				totalFaceCountOutput += objectsOutput[i].faceCount;
+				totalVertexCountOutput += objectsOutput[i].vertexBuffer.length / 3;
+			}
+			ctxOutput.fillText(totalVertexCountOutput.toString() + ' vertices', 10, 20);
+			ctxOutput.fillText(totalFaceCountOutput.toString() + ' faces', 10, 35);
+		}
+
+	};
+	function loadModelOutput() {
+		if(logoTimerIDOutput > 0) {
+			clearInterval(logoTimerIDOutput);
+			logoTimerIDOutput = 0;
+			viewerOutput.enableDefaultInputHandler(true);
+		}
+		viewerOutput.replaceSceneFromUrl("${app.work_url + 'outputVol_0.obj'}");
+		viewerOutput.update();
+	}
+	</script>
+	</span>
+	</a>
+	</li>
+%endif
+  </ul>
+</div>
+
+
+<h2>
+  <a class="toggle" href="#commands" onclick="toggle('commands');">
+    Additional Info
+  </a>
+</h2>
+<div id="commands" style="display:none">
+<p>The algorithm ran with the following commands:
+<pre class="stdio"> ${app.commands} </pre>
+</p>
+</div>
+
+
+<hr />
+
+
+<%include file="footer.html" />
+<%include file="archive_info.html" />
